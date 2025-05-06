@@ -18,7 +18,7 @@ if (!isset($_SESSION['username'])) {
 <?php include("admin_navbar.php"); ?>
 <div class="container">
   <h1 class="text-start pt-4" style="font-family: 'Poppins', sans-serif; font-weight: 600;">DONORS OVERVIEW</h1>
-  <p style="font-size:18px; font-family: 'Poppins', sans-serif; font-weight: 400;">Welcome back, <?php echo $donor_name; ?>!</p>
+
   <hr class="my-4">
 
   <div class="d-flex justify-content-center gap-3">
