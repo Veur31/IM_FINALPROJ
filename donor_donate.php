@@ -66,9 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $address = mysqli_real_escape_string($dbcon, $_POST['address']);
   $last_donation_date = $_POST['last_donation_date'];
 
- 
-  $sql = "INSERT INTO donors (name, gender, birth_date, blood_type, phone, email, address, last_donation_date)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+  $sql = "INSERT INTO donors (name, gender, birth_date, blood_type, phone, email, address, last_donation_date, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
 
   $arrange = $dbcon->prepare($sql);
   $arrange->bind_param("ssssssss", $name, $gender, $birth_date, $blood_type, $phone, $email, $address, $last_donation_date);
