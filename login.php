@@ -28,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($password, $user['password'])) {
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['user_type']; 
+            $_SESSION['donor_id'] = $user['donor_id'];
 
             if ($user['user_type'] == 'Admin') {
                 header("Location: admin_dashboard.php");

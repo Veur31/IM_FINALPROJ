@@ -1,7 +1,7 @@
 <?php
 session_start();
 include("connection.php");
-include("donor_navbar.php");
+include("recipient_navbar.php");
 
 $message = '';
 $already_registered = false;
@@ -55,7 +55,7 @@ if (isset($_SESSION['username'])) {
 }
 
 // Handle form submission only if not already registered
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_registered) {
 
   $name = mysqli_real_escape_string($dbcon, $_POST['name']);
   $gender = $_POST['gender'];
@@ -66,7 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $address = mysqli_real_escape_string($dbcon, $_POST['address']);
   $last_donation_date = $_POST['last_donation_date'];
 
- 
   $sql = "INSERT INTO donors (name, gender, birth_date, blood_type, phone, email, address, last_donation_date)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -79,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = '<div class="alert alert-success text-center mt-3">Successful Registration.</div>';
     $already_registered = true;
   } else {
-    $message = ' ';
+    $message = '<div class="alert alert-danger text-center mt-3">Registration failed. Please try again.</div>';
   }
 
   $arrange->close();
@@ -100,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="container d-flex align-items-center justify-content-center" style="padding-top:120px; max-width: 800px;">
   <div class="card shadow-lg rounded-4 mt-1 w-100">
     <div class="card-body p-3">
-      <h2 class="card-title text-center mb-4">Donor Registration</h2>
+      <h2 class="card-title text-center mb-4">Request Registration</h2>
 
       <?php
         if (!empty($message)) echo $message;
@@ -111,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           You have already registered as a donor. Thank you!
         </div>
       <?php else: ?>
-        <form method="POST" action="donor_donate.php">
+        <form method="POST" action="recipient_blood.php">
           <div class="row">
             <div class="col-md-6">
               <div class="mb-3">
@@ -135,14 +134,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               </div>
 
               <div class="mb-3">
-                <label for="age" class="form-label">Age</label>
-                <input type="text" class="form-control" id="age" name="age" readonly/>
-                <div id="age-warning" class="text-danger mt-1" style="display: none;">
-                  Donors must be between 16 and 65 years old.
-                </div>
-              </div>
-
-              <div class="mb-3">
                 <label for="blood_type" class="form-label">Blood Type</label>
                 <input type="text" class="form-control" id="blood_type" name="blood_type" placeholder="e.g., A+, O-, AB+" required/>
               </div>
@@ -162,9 +153,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <div class="mb-3">
                 <label for="last_donation_date" class="form-label">Last Donation Date</label>
                 <input type="date" class="form-control" id="last_donation_date" name="last_donation_date"/>
-                <div id="donation-warning" class="text-danger mt-1" style="display: none;">
-                  You must wait at least 56 days between donations.
-                </div>
               </div>
 
               <div class="mb-3">

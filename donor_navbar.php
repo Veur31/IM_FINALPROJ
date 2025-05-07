@@ -50,7 +50,7 @@ if (!isset($_SESSION['username'])) {
           </a>
         </li>
         <li class="nav-item mx-2">
-          <a class="nav-link text-white" href="donate.php">
+          <a class="nav-link text-white" href="donor_management.php">
             <div class="d-flex align-items-center mb-2">
               <img class="nav-icon" src="photo/dash.png" alt="User Management Icon" style="width: 30px; margin-right: 10px;">
               <span class="nav-text">User Management</span>

@@ -30,11 +30,19 @@ if (!isset($_SESSION['username'])) {
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    
+
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto" style="font-size: 15px; font-family: 'Open Sans', sans-serif;">
+      <li class="nav-item mx-2">
+          <a class="nav-link text-white" href="recipient.php">
+            <div class="d-flex align-items-center mb-2">
+              <img class="nav-icon" src="photo/receiptient.png" alt="Summary Icon" style="width: 30px; margin-right: 10px;">
+              <span class="nav-text">Home</span>
+            </div>
+          </a>
+        </li>
         <li class="nav-item mx-2">
-          <a class="nav-link text-white" href="index.php">
+          <a class="nav-link text-white" href="recipient_blood.php">
             <div class="d-flex align-items-center mb-2">
               <img class="nav-icon" src="photo/receiptient.png" alt="Summary Icon" style="width: 30px; margin-right: 10px;">
               <span class="nav-text">Request blood</span>

@@ -6,7 +6,7 @@ const donationWarning = document.getElementById('donation-warning');
 const submitBtn = document.getElementById('submitBtn');
 const bloodTypeInput = document.getElementById('blood_type');
 
-// Function to check the age based on birth date
+
 function checkAge() {
   const birthDate = new Date(birthDateInput.value);
   const today = new Date();
@@ -28,7 +28,6 @@ function checkAge() {
   }
 }
 
-// Function to check if the last donation date is valid (at least 56 days ago)
 function checkDonationDate() {
   const donationDate = new Date(donationInput.value);
   const today = new Date();
@@ -43,26 +42,25 @@ function checkDonationDate() {
   }
 }
 
-// Function to validate the blood type
+
 function isValidBloodType(bloodType) {
-  const bloodTypePattern = /^(A|B|AB|O)[+-]$/i; // Regular expression for valid blood types
+  const bloodTypePattern = /^(A|B|AB|O)[+-]$/i;
   return bloodTypePattern.test(bloodType);
 }
 
-// Event listener to update the submit button state
+
 function updateButtonState() {
   const validAge = checkAge();
   const validDonation = checkDonationDate();
   const validBloodType = isValidBloodType(bloodTypeInput.value.trim());
 
-  // Disable the submit button if any condition is false
+
   submitBtn.disabled = !(validAge && validDonation && validBloodType);
 }
 
-// Event listeners for changes in input fields
 birthDateInput.addEventListener('change', updateButtonState);
 donationInput.addEventListener('change', updateButtonState);
 bloodTypeInput.addEventListener('input', updateButtonState);
 
-// Initial check when the page loads
+
 updateButtonState();
