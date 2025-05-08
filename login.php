@@ -29,6 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['user_type']; 
             $_SESSION['donor_id'] = $user['donor_id'];
+            $_SESSION['request_id'] = $user['request_id'];
 
             if ($user['user_type'] == 'Admin') {
                 header("Location: admin_dashboard.php");
@@ -77,9 +78,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <input class="form-check-input" type="checkbox" id="rememberMe">
                   <label class="form-check-label" for="rememberMe">Remember me</label>
                 </div>
-                <a href="forgot_password.php" class="small text-decoration-none">Forgot password?</a>
+                <a href="forgot_password.php" class="small text-decoration-none" style ="color:red;">Forgot password?</a>
               </div>
-              <button type="submit" class="btn btn-primary w-100">Login</button>
+              <button type="submit" class="btn btn-danger w-100">Login</button>
             </form>
           </div>
         </div>

@@ -9,11 +9,11 @@ $email = '';
 $user_id = null;
 $name = ''; // Declare the variable to store the name
 
-// Check if the user is logged in
+
 if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
 
-    // Get email and user_id from registration
+
     $email_query = "SELECT id, email FROM registration WHERE username = ?";
     $stmt_email = $dbcon->prepare($email_query);
     $stmt_email->bind_param("s", $username);
@@ -25,7 +25,7 @@ if (isset($_SESSION['username'])) {
         $user_id = $row['id'];
     }
 
-    // Fetch the full name from the registration table
+
     $name_query = "SELECT full_name FROM registration WHERE username = ?";
     $stmt_name = $dbcon->prepare($name_query);
     $stmt_name->bind_param("s", $username);
@@ -36,7 +36,6 @@ if (isset($_SESSION['username'])) {
         $name = $row['full_name'];
     }
 
-    // Check if already registered in donors
     $check_query = "
         SELECT d.donor_id 
         FROM donors d 
@@ -50,11 +49,10 @@ if (isset($_SESSION['username'])) {
     if ($result_check->num_rows > 0) {
         $already_registered = true;
         $row = $result_check->fetch_assoc();
-        $_SESSION['donor_id'] = $row['donor_id']; // Save donor_id in session
+        $_SESSION['donor_id'] = $row['donor_id']; 
     }
 }
 
-// Handle form submission only if not already registered
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   $name = mysqli_real_escape_string($dbcon, $_POST['name']);
@@ -64,13 +62,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $phone = mysqli_real_escape_string($dbcon, $_POST['phone']);
   $email = mysqli_real_escape_string($dbcon, $_POST['email']);
   $address = mysqli_real_escape_string($dbcon, $_POST['address']);
-  $last_donation_date = $_POST['last_donation_date'];
+  $last_donation_date = $_POST['last_donation_date'];  
+  $age = mysqli_real_escape_string($dbcon, $_POST['age']);
+  $status = 'pending';
 
-  $sql = "INSERT INTO donors (name, gender, birth_date, blood_type, phone, email, address, last_donation_date, status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
+  $sql = "INSERT INTO donors (name, gender, birth_date, blood_type, phone, email, address, last_donation_date, status,age)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
   $arrange = $dbcon->prepare($sql);
-  $arrange->bind_param("ssssssss", $name, $gender, $birth_date, $blood_type, $phone, $email, $address, $last_donation_date);
+  $arrange->bind_param("ssssssssss", $name, $gender, $birth_date, $blood_type, $phone, $email, $address, $last_donation_date,$status, $age);
 
   if ($arrange->execute()) {
     $_SESSION['donor_id'] = $arrange->insert_id; // Store donor_id in session
@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       ?>
 
       <?php if ($already_registered): ?>
-        <div class="alert alert-info text-center mb-5">
+        <div class="alert alert-danger text-center mb-5">
           You have already registered as a donor. Thank you!
         </div>
       <?php else: ?>

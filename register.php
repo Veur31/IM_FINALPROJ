@@ -11,26 +11,32 @@
 <?php
 include("connection.php"); 
 include("navbar.php"); 
+$email_error = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $fullname = $_POST['fullname'];
-    $email = $_POST['email'];
-    $username = $_POST['username'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hashing the password
-    $role = $_POST['role'];
+  $fullname = $_POST['fullname'];
+  $email = $_POST['email'];
+  $username = $_POST['username'];
+  $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+  $role = $_POST['role'];
 
-    // Insert query
-    $sql = "INSERT INTO registration (full_name, email, username, password, user_type)
-            VALUES ('$fullname', '$email', '$username', '$password', '$role')";
+  // Check if the email already exists
+  $checkEmail = "SELECT * FROM registration WHERE email = '$email'";
+  $result = mysqli_query($dbcon, $checkEmail);
 
-    // Execute the query
-    if (mysqli_query($dbcon, $sql)) {
-        echo "<script>alert('Registered successfully!'); window.location.href='login.php';</script>";
-    } else {
-        echo "Error: " . mysqli_error($dbcon);
-    }
+  if (mysqli_num_rows($result) > 0) {
+     $email_error = "This email already exist.";
+  } else {
+      // Proceed to insert
+      $sql = "INSERT INTO registration (full_name, email, username, password, user_type)
+              VALUES ('$fullname', '$email', '$username', '$password', '$role')";
+      
+      if (mysqli_query($dbcon, $sql)) {
+        echo "<script>window.location.href='login.php';</script>";
+      } else {
+          echo "Error: " . mysqli_error($dbcon);
+      }
+  }
 }
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 // Close connection
 mysqli_close($dbcon);
 ?>
@@ -49,8 +55,14 @@ mysqli_close($dbcon);
           </div>
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" name="email" required>
+            <input type="email" class="form-control <?php echo !empty($email_error) ? 'is-invalid' : ''; ?>" id="email" name="email" required value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
+            <?php if (!empty($email_error)): ?>
+              <div class="invalid-feedback">
+                <?php echo $email_error; ?>
+              </div>
+            <?php endif; ?> 
           </div>
+
           <div class="mb-3">
             <label for="username" class="form-label">Username</label>
             <input type="text" class="form-control" id="username" name="username" required>
@@ -64,12 +76,11 @@ mysqli_close($dbcon);
             <select class="form-select" id="role" name="role" required>
               <option value="">Select Role</option>
               <option value="Admin">Admin</option>
-              <option value="Staff">Staff</option>
               <option value="Recipient">Recipient</option>
               <option value="Donor">Donor</option>
             </select>
           </div>
-          <button type="submit" class="btn btn-primary w-100">Register</button>
+          <button type="submit" class="btn btn-danger w-100">Register</button>
         </form>
 
       </div>

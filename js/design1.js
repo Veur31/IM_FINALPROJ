@@ -1,4 +1,6 @@
 const birthDateInput = document.getElementById('birth_date');
+const birthDateInput1 = document.getElementById('birth_date1');
+const ageInput1 = document.getElementById('age1');
 const ageInput = document.getElementById('age');
 const ageWarning = document.getElementById('age-warning');
 const donationInput = document.getElementById('last_donation_date');
@@ -27,7 +29,21 @@ function checkAge() {
     return false;
   }
 }
+function checkAge1() {
+  const birthDate1 = new Date(birthDateInput1.value);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate1.getFullYear();
+  const month = today.getMonth() - birthDate1.getMonth();
+  
+  if (month < 0 || (month === 0 && today.getDate() < birthDate1.getDate())) {
+    age--;
+  }
 
+
+    ageInput1.value = age;
+
+
+}
 function checkDonationDate() {
   const donationDate = new Date(donationInput.value);
   const today = new Date();
