@@ -2,7 +2,11 @@
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
-
+if ( $_SESSION['user_type'] !== 'Admin') {
+  // Redirect to the login page if the user is not logged in or is not a donor
+  header("Location: login.php");
+  exit();
+}
 if (!isset($_SESSION['username'])) {
 
     header("Location: login.php");
@@ -38,7 +42,7 @@ if (!isset($_SESSION['username'])) {
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto" style="font-size: 15px; font-family: 'Open Sans', sans-serif;">
         <li class="nav-item mx-2">
-          <a class="nav-link text-white" href="index.php">
+          <a class="nav-link text-white" href="admin_dashboard.php">
             <div class="d-flex align-items-center mb-2">
             
               <span class="nav-text">Summary</span>
@@ -46,15 +50,7 @@ if (!isset($_SESSION['username'])) {
           </a>
         </li>
         <li class="nav-item mx-2">
-          <a class="nav-link text-white" href="donate.php">
-            <div class="d-flex align-items-center mb-2">
-             
-              <span class="nav-text">Activity log</span>
-            </div>
-          </a>
-        </li>
-        <li class="nav-item mx-2">
-          <a class="nav-link text-white" href="services.php">
+          <a class="nav-link text-white" href="admin_blood_inventory.php">
             <div class="d-flex align-items-center mb-2">
              
               <span class="nav-text">Blood Inventory</span>
@@ -62,7 +58,7 @@ if (!isset($_SESSION['username'])) {
           </a>
         </li>
         <li class="nav-item mx-2">
-          <a class="nav-link text-white" href="services.php">
+          <a class="nav-link text-white" href="admin_donor.php">
             <div class="d-flex align-items-center mb-2">
              
               <span class="nav-text">Donors</span>
@@ -70,7 +66,7 @@ if (!isset($_SESSION['username'])) {
           </a>
         </li>
         <li class="nav-item mx-2">
-          <a class="nav-link text-white" href="services.php">
+          <a class="nav-link text-white" href="admin_recipients.php">
             <div class="d-flex align-items-center mb-2">
              
               <span class="nav-text">Recipients</span>
@@ -78,7 +74,7 @@ if (!isset($_SESSION['username'])) {
           </a>
         </li>
         <li class="nav-item mx-2">
-          <a class="nav-link text-white" href="services.php">
+          <a class="nav-link text-white" href="admin_management.php">
             <div class="d-flex align-items-center mb-2">
               
               <span class="nav-text">User Management</span>

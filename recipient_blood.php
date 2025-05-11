@@ -2,6 +2,11 @@
 session_start();
 include("connection.php");
 include("recipient_navbar.php");
+if (!isset($_SESSION['username']) || $_SESSION['user_type'] !== 'Recipient') {
+    // Redirect to the login page if the user is not logged in or is not a donor
+    header("Location: login.php");
+    exit();
+}
 
 $message = '';
 $already_requested = false;

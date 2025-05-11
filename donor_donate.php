@@ -9,82 +9,111 @@ $email = '';
 $user_id = null;
 $name = ''; // Declare the variable to store the name
 
-
-if (isset($_SESSION['username'])) {
-    $username = $_SESSION['username'];
-
-
-    $email_query = "SELECT id, email FROM registration WHERE username = ?";
-    $stmt_email = $dbcon->prepare($email_query);
-    $stmt_email->bind_param("s", $username);
-    $stmt_email->execute();
-    $result_email = $stmt_email->get_result();
-    if ($result_email->num_rows > 0) {
-        $row = $result_email->fetch_assoc();
-        $email = $row['email'];
-        $user_id = $row['id'];
-    }
-
-
-    $name_query = "SELECT full_name FROM registration WHERE username = ?";
-    $stmt_name = $dbcon->prepare($name_query);
-    $stmt_name->bind_param("s", $username);
-    $stmt_name->execute();
-    $result_name = $stmt_name->get_result();
-    if ($result_name->num_rows > 0) {
-        $row = $result_name->fetch_assoc();
-        $name = $row['full_name'];
-    }
-
-    $check_query = "
-        SELECT d.donor_id 
-        FROM donors d 
-        WHERE d.email = ?
-    ";
-    $stmt_check = $dbcon->prepare($check_query);
-    $stmt_check->bind_param("s", $email);
-    $stmt_check->execute();
-    $result_check = $stmt_check->get_result();
-
-    if ($result_check->num_rows > 0) {
-        $already_registered = true;
-        $row = $result_check->fetch_assoc();
-        $_SESSION['donor_id'] = $row['donor_id']; 
-    }
+// Check if the user is logged in as a donor
+if (!isset($_SESSION['username']) || $_SESSION['user_type'] !== 'Donor') {
+    // Redirect to the login page if the user is not logged in or is not a donor
+    header("Location: login.php");
+    exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+$username = $_SESSION['username'];
 
-  $name = mysqli_real_escape_string($dbcon, $_POST['name']);
-  $gender = $_POST['gender'];
-  $birth_date = $_POST['birth_date'];
-  $blood_type = strtoupper(trim($_POST['blood_type']));
-  $phone = mysqli_real_escape_string($dbcon, $_POST['phone']);
-  $email = mysqli_real_escape_string($dbcon, $_POST['email']);
-  $address = mysqli_real_escape_string($dbcon, $_POST['address']);
-  $last_donation_date = $_POST['last_donation_date'];  
-  $age = mysqli_real_escape_string($dbcon, $_POST['age']);
-  $status = 'pending';
+// Get the email and user_id of the logged-in donor
+$email_query = "SELECT id, email FROM registration WHERE username = ?";
+$stmt_email = $dbcon->prepare($email_query);
+$stmt_email->bind_param("s", $username);
+$stmt_email->execute();
+$result_email = $stmt_email->get_result();
+if ($result_email->num_rows > 0) {
+    $row = $result_email->fetch_assoc();
+    $email = $row['email'];
+    $user_id = $row['id'];
+}
 
-  $sql = "INSERT INTO donors (name, gender, birth_date, blood_type, phone, email, address, last_donation_date, status,age)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+// Get the donor's full name
+$name_query = "SELECT full_name FROM registration WHERE username = ?";
+$stmt_name = $dbcon->prepare($name_query);
+$stmt_name->bind_param("s", $username);
+$stmt_name->execute();
+$result_name = $stmt_name->get_result();
+if ($result_name->num_rows > 0) {
+    $row = $result_name->fetch_assoc();
+    $name = $row['full_name'];
+}
 
-  $arrange = $dbcon->prepare($sql);
-  $arrange->bind_param("ssssssssss", $name, $gender, $birth_date, $blood_type, $phone, $email, $address, $last_donation_date,$status, $age);
+// Check if the donor is already registered
+$check_query = "SELECT d.donor_id, d.status FROM donors d WHERE d.email = ?";
+$stmt_check = $dbcon->prepare($check_query);
+$stmt_check->bind_param("s", $email);
+$stmt_check->execute();
+$result_check = $stmt_check->get_result();
 
-  if ($arrange->execute()) {
-    $_SESSION['donor_id'] = $arrange->insert_id; // Store donor_id in session
-
-    $message = '<div class="alert alert-success text-center mt-3">Successful Registration.</div>';
+if ($result_check->num_rows > 0) {
     $already_registered = true;
-  } else {
-    $message = ' ';
-  }
-
-  $arrange->close();
-  $dbcon->close();
+    $row = $result_check->fetch_assoc();
+    $_SESSION['donor_id'] = $row['donor_id'];
+    $status = $row['status'];
 }
+
+// Check the registration status of the donor
+if (isset($status)) {
+    if ($status === 'approved') {
+  $message = '<div class="alert alert-success text-center mt-3">Your registration has been approved! Your Donor ID is: ' . $_SESSION['donor_id'] . '</div>';
+    } else {
+        $message = '<div class="alert alert-warning text-center mt-3">Your registration is declined.</div>';
+    }
+}
+
+// Process approval if an admin has approved the registration
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['donor_id'])) {
+    $donor_id = $_POST['donor_id'];
+
+    // Update the donor's status to 'approved'
+    $approve_query = "UPDATE donors SET status = 'approved' WHERE donor_id = ?";
+    $stmt_approve = $dbcon->prepare($approve_query);
+    $stmt_approve->bind_param("i", $donor_id);
+    $stmt_approve->execute();
+     
+}
+
+// Handle donor registration
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['donor_id'])) {
+    // Gather form data and insert into the donors table
+    $name = mysqli_real_escape_string($dbcon, $_POST['name']);
+    $gender = $_POST['gender'];
+    $birth_date = $_POST['birth_date'];
+    $blood_type = strtoupper(trim($_POST['blood_type']));
+    $phone = mysqli_real_escape_string($dbcon, $_POST['phone']);
+    $email = mysqli_real_escape_string($dbcon, $_POST['email']);
+    $address = mysqli_real_escape_string($dbcon, $_POST['address']);
+    $last_donation_date = $_POST['last_donation_date'];
+    $age = mysqli_real_escape_string($dbcon, $_POST['age']);
+    $status = 'pending';
+
+    $sql = "INSERT INTO donors (name, gender, birth_date, blood_type, phone, email, address, last_donation_date, status, age)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $arrange = $dbcon->prepare($sql);
+    $arrange->bind_param("ssssssssss", $name, $gender, $birth_date, $blood_type, $phone, $email, $address, $last_donation_date, $status, $age);
+
+    if ($arrange->execute()) {
+        $_SESSION['donor_id'] = $arrange->insert_id; // Store donor_id in session
+        $message = '<div class="alert alert-success text-center mt-3">Successful Registration.</div>';
+        $already_registered = true;
+    } else {
+        $message = '<div class="alert alert-danger text-center mt-3"></div>';
+    }
+
+    $arrange->close();
+}
+
+// Close the database connection
+$dbcon->close();
+
+// Output any messages
+if (!empty($message)) echo $message;
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -107,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       <?php if ($already_registered): ?>
         <div class="alert alert-danger text-center mb-5">
-          You have already registered as a donor. Thank you!
+        Thank you!
         </div>
       <?php else: ?>
         <form method="POST" action="donor_donate.php">
@@ -173,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
           </div>
 
-          <button type="submit" id="submitBtn" class="btn btn-danger w-100">Submit</button>
+          <button type="submit" id="submitBtn" class="btn btn-danger w-100">Update</button>
         </form>
       <?php endif; ?>
     </div>

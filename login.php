@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Verify the hashed password
         if (password_verify($password, $user['password'])) {
             $_SESSION['username'] = $user['username'];
-            $_SESSION['role'] = $user['user_type']; 
+            $_SESSION['user_type'] = $user['user_type']; 
             $_SESSION['donor_id'] = $user['donor_id'];
             $_SESSION['request_id'] = $user['request_id'];
 

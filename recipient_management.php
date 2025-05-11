@@ -6,9 +6,12 @@ include("recipient_navbar.php");
 $message = "";
 
 // Check if the user is logged in
-if (!isset($_SESSION['username'])) {
-    die("Invalid session. Please log in.");
+if (!isset($_SESSION['username']) || $_SESSION['user_type'] !== 'Recipient') {
+    // Redirect to the login page if the user is not logged in or is not a donor
+    header("Location: login.php");
+    exit();
 }
+
 
 $username = $_SESSION['username'];
 
@@ -49,11 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $request_date = $_POST['request_date'];
     $age = mysqli_real_escape_string($dbcon, $_POST['age1']);
 
-    $stmt = $dbcon->prepare("UPDATE requests SET full_name=?, age= ?, gender=?, birth_date=?, address=?, blood_type=?, quantity=?, request_date=? WHERE email=?");
+    $stmt = $dbcon->prepare("UPDATE requests SET full_name=?, age= ? , gender=?, birth_date=?, address=?, blood_type=?, quantity=?, request_date=? WHERE email=?");
     $stmt->bind_param("sssssssss", $full_name, $age, $gender, $birth_date, $address, $blood_type, $quantity, $request_date, $email);
 
     if ($stmt->execute()) {
-        $message = '<div class="alert alert-success text-center mt-3">Request updated successfully.</div>';
+        $message = '<div class="alert alert-success text-center mt-3"> updated successfully.</div>';
     } else {
         $message = '<div class="alert alert-danger text-center mt-3">Update failed: ' . htmlspecialchars($stmt->error) . '</div>';
     }
@@ -140,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </div>
         </div>
 
-        <button type="submit" class="btn btn-danger w-100">Save Request</button>
+        <button type="submit" class="btn btn-danger w-100">Update</button>
       </form>
     </div>
   </div>

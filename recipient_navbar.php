@@ -3,9 +3,10 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-if (!isset($_SESSION['username'])) {
-    header("Location: login.php");
-    exit();
+if (!isset($_SESSION['username']) || $_SESSION['user_type'] !== 'Recipient') {
+  // Redirect to the login page if the user is not logged in or is not a donor
+  header("Location: login.php");
+  exit();
 }
 ?>
 
