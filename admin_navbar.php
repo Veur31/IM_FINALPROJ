@@ -3,10 +3,11 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 if ( $_SESSION['user_type'] !== 'Admin') {
-  // Redirect to the login page if the user is not logged in or is not a donor
+  // Checking if the user is admin
   header("Location: login.php");
   exit();
 }
+//for username validation
 if (!isset($_SESSION['username'])) {
 
     header("Location: login.php");

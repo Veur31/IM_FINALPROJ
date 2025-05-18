@@ -4,19 +4,20 @@
   include("donor_navbar.php");
 
   $message = "";
+  // Checking if donor is login, also for username validation
   if (!isset($_SESSION['username']) || $_SESSION['user_type'] !== 'Donor') {
-    // Redirect to the login page if the user is not logged in or is not a donor
+   
     header("Location: login.php");
     exit();
 }
-  // Ensure the donor_id is set in the session
+  // checking if there is session
   if (!isset($_SESSION['donor_id'])) {
       die("Invalid session. No donor ID found.");
   }
 
   $donor_id = $_SESSION['donor_id'];  // Get the donor_id from the session
 
-  // Fetch donor data based on the session's donor_id
+  // Fetch donor data based on the sessions donor_id
   $query = "SELECT * FROM donors WHERE donor_id = ?";
   $stmt = $dbcon->prepare($query);
   $stmt->bind_param("i", $donor_id);
@@ -29,7 +30,7 @@
       die("Donor not found.");
   }
 
-  // Handle form submission to update donor data
+  // modify the data 
   if ($_SERVER["REQUEST_METHOD"] === "POST") {
       // Sanitize and assign POST values to variables
       $name = mysqli_real_escape_string($dbcon, $_POST['name']);
@@ -43,7 +44,7 @@
       $age = mysqli_real_escape_string($dbcon, $_POST['age']);
       
 
-      // SQL update query
+
       $update = "UPDATE donors SET name=?, gender=?, birth_date=?, blood_type=?, phone=?, email=?, address=?, last_donation_date=?, age=? WHERE donor_id=?";
       $stmt = $dbcon->prepare($update);
       $stmt->bind_param("ssssssssii", $name, $gender, $birth_date, $blood_type, $phone, $email, $address, $last_donation_date, $age, $donor_id);

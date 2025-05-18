@@ -9,16 +9,17 @@ $email = '';
 $user_id = null;
 $name = ''; // Declare the variable to store the name
 
-// Check if the user is logged in as a donor
+// Checking if donor is login, also for username validation
 if (!isset($_SESSION['username']) || $_SESSION['user_type'] !== 'Donor') {
     // Redirect to the login page if the user is not logged in or is not a donor
     header("Location: login.php");
     exit();
 }
 
+
 $username = $_SESSION['username'];
 
-// Get the email and user_id of the logged-in donor
+// getting the email because it will be automatically filled up later
 $email_query = "SELECT registration_id, email FROM registration WHERE username = ?";
 $stmt_email = $dbcon->prepare($email_query);
 $stmt_email->bind_param("s", $username);
@@ -30,7 +31,7 @@ if ($result_email->num_rows > 0) {
     $user_id = $row['id'];
 }
 
-// Get the donor's full name
+// Get the donor's full name because it will be automatically filled up later
 $name_query = "SELECT full_name FROM registration WHERE username = ?";
 $stmt_name = $dbcon->prepare($name_query);
 $stmt_name->bind_param("s", $username);
@@ -64,7 +65,7 @@ if (isset($status)) {
     }
 }
 
-// Process approval if an admin has approved the registration
+//Checking the approval
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['donor_id'])) {
     $donor_id = $_POST['donor_id'];
 
@@ -76,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['donor_id'])) {
      
 }
 
-// Handle donor registration
+// This section is for registration of the donor
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['donor_id'])) {
     // Gather form data and insert into the donors table
     $name = mysqli_real_escape_string($dbcon, $_POST['name']);
@@ -107,10 +108,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['donor_id'])) {
     $arrange->close();
 }
 
-// Close the database connection
+// close the database connection
 $dbcon->close();
 
-// Output any messages
+
 if (!empty($message)) echo $message;
 ?>
 

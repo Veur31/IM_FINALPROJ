@@ -1,18 +1,17 @@
 <?php
 session_start();
 include("connection.php");
-
+//Checjing if the user is admin
 if ( $_SESSION['user_type'] !== 'Admin') {
-  // Redirect to the login page if the user is not logged in or is not a donor
   header("Location: login.php");
   exit();
 }
+//for username validation
 if (!isset($_SESSION['username'])) {
-
     header("Location: login.php");
     exit();
 }
-
+//Getting the username to be displayed later
 $username = $_SESSION['username'];
 $query = "SELECT full_name FROM registration WHERE username = '$username'";
 $result = mysqli_query($dbcon, $query);
@@ -87,7 +86,7 @@ if ($stock_result) {
     }
 }
 
-
+// Getting the total needed blood for the recipients
 $stock_query_recipients = "SELECT blood_type, SUM(quantity) AS total_quantity FROM requests GROUP BY blood_type";
 $stock_result_recipients = mysqli_query($dbcon, $stock_query_recipients);
 

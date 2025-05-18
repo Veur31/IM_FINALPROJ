@@ -4,7 +4,7 @@ include("connection.php");
 
 $error = "";
 
-
+//getting the email for validation
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = mysqli_real_escape_string($dbcon, $_POST['email']);
 

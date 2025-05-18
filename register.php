@@ -15,6 +15,7 @@ include("navbar.php");
 $email_error = '';
 $password_error = '';
 
+//getting the information input by the user
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $fullname = $_POST['fullname'];
   $email = $_POST['email'];
@@ -22,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $password_raw = $_POST['password'];
   $role = $_POST['role'];
 
-  // Server-side password validation
+  // password validation
   $uppercase = preg_match('@[A-Z]@', $password_raw);
   $number    = preg_match('@[0-9]@', $password_raw);
   $special= preg_match('@[^\w]@', $password_raw);

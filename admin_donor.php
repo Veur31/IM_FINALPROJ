@@ -1,18 +1,18 @@
 <?php
 session_start();
 include("connection.php");
-
+//Checking if the user is admin
 if ( $_SESSION['user_type'] !== 'Admin') {
-  // Redirect to the login page if the user is not logged in or is not a donor
   header("Location: login.php");
   exit();
 }
+//for username validation
 if (!isset($_SESSION['username'])) {
 
     header("Location: login.php");
     exit();
 }
-
+//for username validation
 $username = $_SESSION['username'];
 $query = "SELECT full_name FROM registration WHERE username = '$username'";
 $result = mysqli_query($dbcon, $query);
@@ -50,7 +50,7 @@ if ($pending_donors_female_r) {
 
 
 $blood_stock = [];
-
+//Counting the total count per blood type
 $stock_query = "SELECT blood_type, COUNT(*) AS donor_count FROM donors GROUP BY blood_type";
 $stock_result = mysqli_query($dbcon, $stock_query);
 
@@ -65,9 +65,9 @@ $result = mysqli_query($dbcon, $query);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['donor_id'])) {
     $donor_id = $_POST['donor_id'];
 
-    // Update the donor's status to 'approved'
   
-    // Determine action: approve or cancel
+  
+    //  approve or cancel
     if (isset($_POST['approve'])) {
         $status = 'approved';
     } elseif (isset($_POST['cancel'])) {
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['donor_id'])) {
     }
       $update_query = "UPDATE donors SET status = '$status' WHERE donor_id = '$donor_id'";
     if (mysqli_query($dbcon, $update_query)) {
-        // Redirect back to the dashboard or donor list after approval
+
         header("Location: admin_donor.php");
         exit();
     } else {

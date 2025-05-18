@@ -2,9 +2,9 @@
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
-
+  // Checking if recipient is login, also for username validation
 if (!isset($_SESSION['username']) || $_SESSION['user_type'] !== 'Recipient') {
-  // Redirect to the login page if the user is not logged in or is not a donor
+ 
   header("Location: login.php");
   exit();
 }

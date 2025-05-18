@@ -3,16 +3,17 @@ session_start();
 include("connection.php");
 
 if ( $_SESSION['user_type'] !== 'Admin') {
-  // Redirect to the login page if the user is not logged in or is not a donor
+//checking if the user is admin
   header("Location: login.php");
   exit();
 }
+//for username validation
 if (!isset($_SESSION['username'])) {
 
     header("Location: login.php");
     exit();
 }
-
+// for displaying username later
 $username = $_SESSION['username'];
 $query = "SELECT full_name FROM registration WHERE username = '$username'";
 $result = mysqli_query($dbcon, $query);
@@ -31,14 +32,14 @@ $result = mysqli_query($dbcon, $query);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_id'])) {
     $request_id = $_POST['request_id'];
 
-    // Determine action: approve or cancel
+    //approve or cancel
     if (isset($_POST['approve'])) {
         $status = 'approved';
     } elseif (isset($_POST['cancel'])) {
         $status = 'declined';
     }
 
-    // Now run the correct UPDATE query
+    // Update query for the status
     $update_query = "UPDATE requests SET status = '$status' WHERE request_id = $request_id";
 
     if (mysqli_query($dbcon, $update_query)) {
@@ -76,6 +77,7 @@ if ($pending_recipients_r) {
     
 }
 
+//counting the total blood needed per blood type
 $stock_query_recipients = "SELECT blood_type, SUM(quantity) AS total_quantity FROM requests GROUP BY blood_type";
 $stock_result_recipients = mysqli_query($dbcon, $stock_query_recipients);
 

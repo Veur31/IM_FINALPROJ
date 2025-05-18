@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['username']) || $_SESSION['user_type'] !== 'Donor') {
-    // Redirect to the login page if the user is not logged in or is not a donor
+ // Checking if donor is login, also for username validation
     header("Location: login.php");
     exit();
 }

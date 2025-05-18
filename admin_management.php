@@ -1,18 +1,17 @@
 <?php
 session_start();
 include("connection.php");
-
+//Checjing if the user is admin
 if ($_SESSION['user_type'] !== 'Admin') {
-  // Redirect to the login page if the user is not logged in or is not an admin
   header("Location: login.php");
   exit();
 }
-
+//for username validation
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit();
 }
-
+//for username validation
 $username = $_SESSION['username'];
 $query = "SELECT full_name FROM registration WHERE username = '$username'";
 $result = mysqli_query($dbcon, $query);
@@ -31,11 +30,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email'])) {
     $email = mysqli_real_escape_string($dbcon, $_POST['email']);
 
     if (isset($_POST['remove'])) {
-        // Delete from parent table (registration)
+        // Delete from table (registration)
         $delete_query = "DELETE FROM registration WHERE email = '$email'";
 
         if (mysqli_query($dbcon, $delete_query)) {
-            // Deletion from donors will happen automatically due to ON DELETE CASCADE
+
             header("Location: admin_management.php");
             exit();
         } 
@@ -52,11 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email'])) {
     $email = mysqli_real_escape_string($dbcon, $_POST['email']);
 
     if (isset($_POST['remove'])) {
-        // Delete from parent table (registration)
+        // Delete from table (registration)
         $delete_query = "DELETE FROM registration WHERE email = '$email'";
 
         if (mysqli_query($dbcon, $delete_query)) {
-            // Deletion from donors will happen automatically due to ON DELETE CASCADE
+
             header("Location: admin_management.php");
             exit();
         } 

@@ -1,31 +1,35 @@
 <?php
 session_start();
 include("connection.php");
-
+//  only admin can access
 if ($_SESSION['user_type'] !== 'Admin') {
     header("Location: login.php");
     exit();
 }
-
+// To idenify if the user is log in
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit();
 }
 
+// get the user full name to display in the screen
 $username = $_SESSION['username'];
 $query = "SELECT full_name FROM registration WHERE username = '$username'";
 $result = mysqli_query($dbcon, $query);
 $admin_name = "";
 $message = '';
 
+// if there is user
 if ($result && mysqli_num_rows($result) == 1) {
     $row = mysqli_fetch_assoc($result);
     $admin_name = $row['full_name'];
 }
 
 $blood_stock = [];
+//associative array, it is set to none so that if they failed to search it will not cause error
 $donor_info = ['name' => '', 'age' => '', 'blood_type' => '', 'status' => ''];
 
+// fetching the donor_id so the data of the user will be available
 if (isset($_POST['donor_id']) && !empty($_POST['donor_id'])) {
     $donor_id = $_POST['donor_id'];
 

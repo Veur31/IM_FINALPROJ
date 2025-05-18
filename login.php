@@ -12,7 +12,7 @@
 session_start();
 include('connection.php');
 include('navbar.php');
-
+//getting the username and password from the user input
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = mysqli_real_escape_string($dbcon, $_POST['username']);
     $password = mysqli_real_escape_string($dbcon, $_POST['password']);
@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (mysqli_num_rows($result) == 1) {
         $user = mysqli_fetch_assoc($result);
 
-        // Verify the hashed password
+        // check the hashed password
         if (password_verify($password, $user['password'])) {
             $_SESSION['username'] = $user['username'];
             $_SESSION['user_type'] = $user['user_type']; 

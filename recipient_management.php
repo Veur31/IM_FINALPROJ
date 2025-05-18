@@ -5,9 +5,9 @@ include("recipient_navbar.php");
 
 $message = "";
 
-// Check if the user is logged in
+  // Checking if recipient is login, also for username validation
 if (!isset($_SESSION['username']) || $_SESSION['user_type'] !== 'Recipient') {
-    // Redirect to the login page if the user is not logged in or is not a donor
+ 
     header("Location: login.php");
     exit();
 }
@@ -41,7 +41,7 @@ if (!$request) {
     die("No request found for this recipient.");
 }
 
-// Update request if form submitted
+//this is for any updates made by the recipients
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = mysqli_real_escape_string($dbcon, $_POST['full_name']);
     $gender = $_POST['gender'];
