@@ -25,7 +25,17 @@ if ($result && mysqli_num_rows($result) == 1) {
     $admin_name = $row['full_name'];
 }
 
-$blood_stock = [];
+$blood_stock = [
+    'A+' => 0,
+    'A-' => 0,
+    'B+' => 0,
+    'B-' => 0,
+    'AB+' => 0,
+    'AB-' => 0,
+    'O+' => 0,
+    'O-' => 0
+];
+
 //associative array, it is set to none so that if they failed to search it will not cause error
 $donor_info = ['name' => '', 'age' => '', 'blood_type' => '', 'status' => ''];
 
