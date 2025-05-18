@@ -2,9 +2,9 @@
 session_start();
 include("connection.php");
 include("recipient_navbar.php");
-
+  // Checking if recipient is login, also for username validation
 if (!isset($_SESSION['username']) || $_SESSION['user_type'] !== 'Recipient') {
-    // Redirect to the login page if the user is not logged in or is not a recipient
+
     header("Location: login.php");
     exit();
 }
@@ -14,10 +14,10 @@ $already_requested = false;
 $email = '';
 $user_id = null;
 $name = '';
-
+// for username validation checking (session)
 if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
-
+    
     $email_query = "SELECT registration_id, email, full_name FROM registration WHERE username = ?";
     $stmt_email = $dbcon->prepare($email_query);
     $stmt_email->bind_param("s", $username);
@@ -56,7 +56,7 @@ if (isset($status)) {
     }
 }
 
-
+//getting the infor from the recipients input
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = mysqli_real_escape_string($dbcon, $_POST['full_name']);
     $gender = $_POST['gender'];
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $sql = "INSERT INTO requests (full_name, gender, birth_date, address, email, blood_type, quantity, request_date, age, status)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+    //inseeting the data to the table
     if ($stmt = $dbcon->prepare($sql)) {
         $stmt->bind_param("ssssssssss", $full_name, $gender, $birth_date, $address, $email, $blood_type, $quantity, $request_date, $age, $status);
 
