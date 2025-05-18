@@ -19,7 +19,7 @@ if (!isset($_SESSION['username']) || $_SESSION['user_type'] !== 'Donor') {
 $username = $_SESSION['username'];
 
 // Get the email and user_id of the logged-in donor
-$email_query = "SELECT id, email FROM registration WHERE username = ?";
+$email_query = "SELECT registration_id, email FROM registration WHERE username = ?";
 $stmt_email = $dbcon->prepare($email_query);
 $stmt_email->bind_param("s", $username);
 $stmt_email->execute();
@@ -60,7 +60,7 @@ if (isset($status)) {
     if ($status === 'approved') {
   $message = '<div class="alert alert-success text-center mt-3">Your registration has been approved! Your Donor ID is: ' . $_SESSION['donor_id'] . '</div>';
     } else {
-        $message = '<div class="alert alert-warning text-center mt-3">Your registration is declined.</div>';
+        $message = '<div class="alert alert-success text-center mt-3"></div>';
     }
 }
 
@@ -136,7 +136,7 @@ if (!empty($message)) echo $message;
 
       <?php if ($already_registered): ?>
         <div class="alert alert-danger text-center mb-5">
-        Thank you!
+        Thank you, email will be sent.
         </div>
       <?php else: ?>
         <form method="POST" action="donor_donate.php">

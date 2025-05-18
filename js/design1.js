@@ -80,3 +80,4 @@ bloodTypeInput.addEventListener('input', updateButtonState);
 
 
 updateButtonState();
+

@@ -2,8 +2,9 @@
 session_start();
 include("connection.php");
 include("recipient_navbar.php");
+
 if (!isset($_SESSION['username']) || $_SESSION['user_type'] !== 'Recipient') {
-    // Redirect to the login page if the user is not logged in or is not a donor
+    // Redirect to the login page if the user is not logged in or is not a recipient
     header("Location: login.php");
     exit();
 }
@@ -13,10 +14,11 @@ $already_requested = false;
 $email = '';
 $user_id = null;
 $name = '';
+
 if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
 
-    $email_query = "SELECT id, email, full_name FROM registration WHERE username = ?";
+    $email_query = "SELECT registration_id, email, full_name FROM registration WHERE username = ?";
     $stmt_email = $dbcon->prepare($email_query);
     $stmt_email->bind_param("s", $username);
     $stmt_email->execute();
@@ -24,8 +26,8 @@ if (isset($_SESSION['username'])) {
 
     if ($result_email->num_rows > 0) {
         $row = $result_email->fetch_assoc();
-        if (!empty($row['id'])) {
-            $user_id = $row['id'];
+        if (!empty($row['registration_id'])) {
+            $user_id = $row['registration_id'];
             $email = $row['email'];
             $name = $row['full_name'];
 
@@ -46,6 +48,14 @@ if (isset($_SESSION['username'])) {
     }
 }
 
+if (isset($status)) {
+    if ($status === 'approved') {
+        $message = '<div class="alert alert-success text-center mt-3">Your registration has been approved! Your Recipient ID is: ' . $_SESSION['recipient_id'] . '</div>';
+    } else {
+        $message = '<div class="alert alert-warning text-center mt-3">Your registration is declined.</div>';
+    }
+}
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = mysqli_real_escape_string($dbcon, $_POST['full_name']);
@@ -59,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = 'Pending'; 
     $age = mysqli_real_escape_string($dbcon, $_POST['age1']);
 
-    $sql = "INSERT INTO requests (full_name, gender, birth_date, address, email, blood_type, quantity, request_date, age,  status)
+    $sql = "INSERT INTO requests (full_name, gender, birth_date, address, email, blood_type, quantity, request_date, age, status)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     if ($stmt = $dbcon->prepare($sql)) {
@@ -68,15 +78,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($stmt->execute()) {
             $message = '<div class="alert alert-success text-center mt-3">Blood request submitted successfully.</div>';
             $already_requested = true;
+            if (isset($status)) {
+
+}
         } else {
             $message = '<div class="alert alert-danger text-center mt-3">Error submitting request.</div>';
         }
 
         $stmt->close();
-    } else {
-        $message = '<div class="alert alert-danger text-center mt-3">Error preparing the query.</div>';
-    }
-}
+    } 
+}if (!empty($message)) echo $message;
 ?>
 
 <!DOCTYPE html>
@@ -97,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <?php if ($already_requested): ?>
                 <div class="alert alert-info text-center mb-5">
-                    You have already submitted a blood request.
+                    Thank you, email will be sent.
                 </div>
             <?php else: ?>
                 <form method="POST" action="recipient_blood.php">
@@ -124,11 +135,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <input type="text" class="form-control" id="age1" name="age1" readonly />
                                     </div>
                             </div>
-
-                            <div class="mb-3">
-                                <label for="blood_type" class="form-label">Blood Type</label>
-                                <input type="text" class="form-control" id="blood_type" name="blood_type" placeholder="e.g., A+, O-, AB+" required />
-                            </div>
+<div class="mb-3">
+    <label for="blood_type" class="form-label">Blood Type</label>
+    <select class="form-select" id="blood_type" name="blood_type" required>
+        <option selected disabled>Select Blood Type</option>
+        <option value="A+">A+</option>
+        <option value="A-">A-</option>
+        <option value="B+">B+</option>
+        <option value="B-">B-</option>
+        <option value="AB+">AB+</option>
+        <option value="AB-">AB-</option>
+        <option value="O+">O+</option>
+        <option value="O-">O-</option>
+    </select>
+</div>
 
        
                         </div>

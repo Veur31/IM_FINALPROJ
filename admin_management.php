@@ -24,35 +24,39 @@ if ($result && mysqli_num_rows($result) == 1) {
 }
 
 // Fetch all pending donors
-$query = "SELECT donor_id, name, gender, birth_date, blood_type, last_donation_date FROM donors WHERE status = 'pending'";
+$query = "SELECT donor_id, name, gender, birth_date, blood_type, last_donation_date,email, status FROM donors WHERE status = 'approved' || status = 'pending' ||status = 'declined' ";
 $result_donors = mysqli_query($dbcon, $query);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['donor_id'])) {
-    $donor_id = $_POST['donor_id'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email'])) {
+    $email = mysqli_real_escape_string($dbcon, $_POST['email']);
 
-    // Check if the 'remove' action is triggered
     if (isset($_POST['remove'])) {
-        // Delete the specific donor from the database
-        $delete_query = "DELETE FROM donors WHERE donor_id = $donor_id";
+        // Delete from parent table (registration)
+        $delete_query = "DELETE FROM registration WHERE email = '$email'";
+
         if (mysqli_query($dbcon, $delete_query)) {
+            // Deletion from donors will happen automatically due to ON DELETE CASCADE
             header("Location: admin_management.php");
             exit();
         } 
     }
 }
 
+
 // Fetch all pending requests
-$query = "SELECT request_id, full_name, gender, birth_date, blood_type, request_date FROM requests WHERE status = 'pending'";
+$query = "SELECT request_id, full_name, gender, birth_date, blood_type, request_date,email,  status FROM requests WHERE status = 'approved' || status = 'pending' ||status = 'declined' ";
 $result_requests = mysqli_query($dbcon, $query);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_id'])) {
-    $request_id = $_POST['request_id'];
 
-    // Check if the 'remove' action is triggered
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email'])) {
+    $email = mysqli_real_escape_string($dbcon, $_POST['email']);
+
     if (isset($_POST['remove'])) {
-        // Delete the specific request from the database
-        $delete_query = "DELETE FROM requests WHERE request_id = $request_id";
+        // Delete from parent table (registration)
+        $delete_query = "DELETE FROM registration WHERE email = '$email'";
+
         if (mysqli_query($dbcon, $delete_query)) {
+            // Deletion from donors will happen automatically due to ON DELETE CASCADE
             header("Location: admin_management.php");
             exit();
         } 
@@ -101,6 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_id'])) {
                             <th>Birth Date</th>
                             <th>Blood Type</th>
                             <th>Last Donation</th>
+                             <th>Status</th>
                             <th style="width: 30px;">Action</th>
                         </tr>
                     </thead>
@@ -113,11 +118,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_id'])) {
                                 <td><?= $row['birth_date'] ?></td>
                                 <td><?= $row['blood_type'] ?></td>
                                 <td><?= $row['last_donation_date'] ?></td>
+                                <td><?= $row['status'] ?></td>
                                 <td>
-                                    <form method="post" action="admin_management.php" class="d-flex">
-                                        <input type="hidden" name="donor_id" value="<?= $row['donor_id'] ?>">
-                                        <button type="submit" name="remove" class="btn btn-danger btn-sm me-2">Remove</button>
-                                    </form>
+                                <form method="post" action="admin_management.php" class="d-flex" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                    <input type="hidden" name="email" value="<?= $row['email'] ?>">
+                                    <button type="submit" name="remove" class="btn btn-danger btn-sm me-2">Remove</button>
+                                </form>
                                 </td>
                             </tr>
                         <?php endwhile; ?>
@@ -131,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_id'])) {
 <div class="container mt-5">
     <div class="card">
         <div class="card-header bg-danger text-white">
-            <h4>Approve Donors</h4>
+            <h4>Recipients</h4>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -144,6 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_id'])) {
                             <th>Birth Date</th>
                             <th>Blood Type</th>
                             <th>Last Donation</th>
+                            <th>Status</th>
                             <th style="width: 30px;">Action</th>
                         </tr>
                     </thead>
@@ -156,9 +163,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_id'])) {
                                 <td><?= $row['birth_date'] ?></td>
                                 <td><?= $row['blood_type'] ?></td>
                                 <td><?= $row['request_date'] ?></td>
+                                 <td><?= $row['status'] ?></td>
                                 <td>
-                                    <form method="post" action="admin_management.php" class="d-flex">
-                                        <input type="hidden" name="request_id" value="<?= $row['request_id'] ?>">
+                                    <form method="post" action="admin_management.php" class="d-flex" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                             <input type="hidden" name="email" value="<?= $row['email'] ?>">
                                         <button type="submit" name="remove" class="btn btn-danger btn-sm me-2">Remove</button>
                                     </form>
                                 </td>

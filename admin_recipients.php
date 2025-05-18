@@ -26,7 +26,7 @@ if ($result && mysqli_num_rows($result) == 1) {
 
 
 // Fetch all pending donors
-$query = "SELECT request_id, full_name, gender, birth_date, blood_type, request_date FROM requests WHERE status = 'pending'";
+$query = "SELECT request_id, full_name, gender, birth_date, blood_type, request_date, quantity FROM requests WHERE status = 'pending'";
 $result = mysqli_query($dbcon, $query);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_id'])) {
     $request_id = $_POST['request_id'];
@@ -227,6 +227,7 @@ if ($stock_result_recipients) {
                             <th>Gender</th>
                             <th>Birth Date</th>
                             <th>Blood Type</th>
+                             <th>Quantity</th>
                             <th>Last Donation</th>
                             <th style="width: 30px;">Action</th>
                         </tr>
@@ -239,6 +240,7 @@ if ($stock_result_recipients) {
                                 <td><?= $row['gender'] ?></td>
                                 <td><?= $row['birth_date'] ?></td>
                                 <td><?= $row['blood_type'] ?></td>
+                                 <td><?= $row['quantity'] ?></td>
                                 <td><?= $row['request_date'] ?></td>
                                   <td>
                                     <form method="post" action="admin_recipients.php" class="d-flex">

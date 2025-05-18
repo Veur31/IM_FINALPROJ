@@ -33,9 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if ($user['user_type'] == 'Admin') {
                 header("Location: admin_dashboard.php");
-            } else if ($user['user_type'] == 'Staff') {
-                header('Location: staff_dashboard.php');
-            } else if ($user['user_type'] == 'Donor') {
+            }  else if ($user['user_type'] == 'Donor') {
                 header('Location: donor.php');
             } else if ($user['user_type'] == 'Recipient') {
                 header('Location: recipient.php');

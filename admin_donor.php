@@ -163,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['donor_id'])) {
         <div class="card" style="width: 79%; padding: 10px;">
             <div class="card-body">
                 <p class="card-text" style="text-align: left; font-family: 'Playfair Display', serif; font-size:30px; padding-top:20px;">
-                   Number of donors per Blood Type<p class="card-text" style="font-family: 'Playfair Display', serif; font-size:15px; margin: 0;"> (Potential) </p>
+                   Number of donors per Blood Type<p class="card-text" style="font-family: 'Playfair Display', serif; font-size:15px; margin: 0;"> (After approval) </p>
                     <br><br>
                 </p>
 

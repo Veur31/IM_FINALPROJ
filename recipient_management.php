@@ -117,10 +117,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 
-            <div class="mb-3">
-              <label for="blood_type" class="form-label">Blood Type</label>
-              <input type="text" class="form-control" id="blood_type" name="blood_type" value="<?= $request ? htmlspecialchars($request['blood_type']) : '' ?>" required />
-            </div>
+<div class="mb-3">
+    <label for="blood_type" class="form-label">Blood Type</label>
+    <select class="form-select" id="blood_type" name="blood_type" required>
+        <option selected disabled>Select Blood Type</option>
+        <option value="A+">A+</option>
+        <option value="A-">A-</option>
+        <option value="B+">B+</option>
+        <option value="B-">B-</option>
+        <option value="AB+">AB+</option>
+        <option value="AB-">AB-</option>
+        <option value="O+">O+</option>
+        <option value="O-">O-</option>
+    </select>
+</div>
           </div>
 
           <div class="col-md-6">
