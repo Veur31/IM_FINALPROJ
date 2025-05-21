@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $blood_type = strtoupper(trim($_POST['blood_type']));
     $quantity = (int)$_POST['quantity'];
     $request_date = $_POST['request_date'];
-    $age = mysqli_real_escape_string($dbcon, $_POST['age1']);
+    $age = mysqli_real_escape_string($dbcon, $_POST['age']);
 
     $stmt = $dbcon->prepare("UPDATE requests SET full_name=?, age= ? , gender=?, birth_date=?, address=?, blood_type=?, quantity=?, request_date=? WHERE email=?");
     $stmt->bind_param("sssssssss", $full_name, $age, $gender, $birth_date, $address, $blood_type, $quantity, $request_date, $email);
@@ -106,15 +106,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               </select>
             </div>
         
-            <div class="mb-3">
-    <label for="birth_date1" class="form-label">Birth Date</label>
-    <input type="date" class="form-control" id="birth_date1" name="birth_date1" required onchange="checkAge1()"
-    value="<?= htmlspecialchars(date('Y-m-d', strtotime($request['birth_date'] ?? ''))) ?>" />
-</div>
-<div class="mb-3">
-    <label for="age1" class="form-label">Age</label>
-    <input type="text" class="form-control" id="age1" name="age1" readonly value="<?= $request ? htmlspecialchars($request['age']) : '' ?>" />
-</div>
+   <div class="mb-3">
+                <label for="birth_date" class="form-label">Birth Date</label>
+                <input type="date" class="form-control" id="birth_date" name="birth_date" required/>
+              </div>
+
+              <div class="mb-3">
+                <label for="age" class="form-label">Age</label>
+                <input type="text" class="form-control" id="age" name="age" readonly/>
+                <div id="age-warning" class="text-danger mt-1" style="display: none;">
+                  Valid age only
+                </div>
+              </div>
 
 
 <div class="mb-3">
@@ -153,14 +156,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </div>
         </div>
 
-        <button type="submit" class="btn btn-danger w-100">Update</button>
+                    <button type="submit" id="submitBtn" class="btn btn-danger w-100">Update</button>
       </form>
     </div>
   </div>
 </div>
 
 <?php include("footer.php"); ?>
-<script src="js/design1.js"></script>
+<script src="js/design3.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

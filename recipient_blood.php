@@ -60,14 +60,14 @@ if (isset($status)) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = mysqli_real_escape_string($dbcon, $_POST['full_name']);
     $gender = $_POST['gender'];
-    $birth_date = $_POST['birth_date1'];
+    $birth_date = $_POST['birth_date'];
     $address = mysqli_real_escape_string($dbcon, $_POST['address']);
     $email = mysqli_real_escape_string($dbcon, $_POST['email']);
     $blood_type = strtoupper(trim($_POST['blood_type']));
     $quantity = (int)$_POST['quantity'];
     $request_date = $_POST['request_date'];
     $status = 'Pending'; 
-    $age = mysqli_real_escape_string($dbcon, $_POST['age1']);
+    $age = mysqli_real_escape_string($dbcon, $_POST['age']);
 
     $sql = "INSERT INTO requests (full_name, gender, birth_date, address, email, blood_type, quantity, request_date, age, status)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -124,33 +124,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <option selected disabled>Select Gender</option>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
-                                        <option value="Other">Other</option>
                                     </select>
                             </div>
-                            <div class="mb-3">
-                                <label for="birth_date1" class="form-label">Birth Date</label>
-                                <input type="date" class="form-control" id="birth_date1" name="birth_date1" required onchange="checkAge1()" required />
-                                    <div class="mb-3">
-                                        <label for="age1" class="form-label">Age</label>
-                                        <input type="text" class="form-control" id="age1" name="age1" readonly />
-                                    </div>
-                            </div>
-<div class="mb-3">
-    <label for="blood_type" class="form-label">Blood Type</label>
-    <select class="form-select" id="blood_type" name="blood_type" required>
-        <option selected disabled>Select Blood Type</option>
-        <option value="A+">A+</option>
-        <option value="A-">A-</option>
-        <option value="B+">B+</option>
-        <option value="B-">B-</option>
-        <option value="AB+">AB+</option>
-        <option value="AB-">AB-</option>
-        <option value="O+">O+</option>
-        <option value="O-">O-</option>
-    </select>
-</div>
+                                    
+              <div class="mb-3">
+                <label for="birth_date" class="form-label">Birth Date</label>
+                <input type="date" class="form-control" id="birth_date" name="birth_date" required/>
+              </div>
 
-       
+              <div class="mb-3">
+                <label for="age" class="form-label">Age</label>
+                <input type="text" class="form-control" id="age" name="age" readonly/>
+                <div id="age-warning" class="text-danger mt-1" style="display: none;">
+                  Valid age only
+                </div>
+              </div>
+                            <div class="mb-3">
+                                <label for="blood_type" class="form-label">Blood Type</label>
+                                <select class="form-select" id="blood_type" name="blood_type" required>
+                                    <option selected disabled>Select Blood Type</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                </select>
+                            </div>
+
+                                
                         </div>
 
                         <div class="col-md-6">
@@ -175,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-danger w-100">Submit Request</button>
+                    <button type="submit" id="submitBtn" class="btn btn-danger w-100">Submit</button>
                 </form>
             <?php endif; ?>
         </div>
@@ -185,6 +189,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php include("footer.php"); ?>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="js/design1.js"></script>
+<script src="js/design3.js"></script>
 </body>
 </html>

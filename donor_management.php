@@ -111,16 +111,28 @@
               <label for="age" class="form-label">Age</label>
               <input type="text" class="form-control" id="age" name="age" readonly />
             </div>
-            <div class="mb-3">
-              <label for="blood_type" class="form-label">Blood Type</label>
-              <input type="text" class="form-control" id="blood_type" name="blood_type" value="<?= htmlspecialchars($donor['blood_type']) ?>" required />
-            </div>
+           <div class="mb-3">
+            <label for="blood_type" class="form-label">Blood Type</label>
+            <select class="form-select" id="blood_type" name="blood_type" required>
+              <option value=""> Select Blood Type </option>
+              <option value="A+" <?= $donor['blood_type'] == 'A+' ? 'selected' : '' ?>>A+</option>
+              <option value="A-" <?= $donor['blood_type'] == 'A-' ? 'selected' : '' ?>>A-</option>
+              <option value="B+" <?= $donor['blood_type'] == 'B+' ? 'selected' : '' ?>>B+</option>
+              <option value="B-" <?= $donor['blood_type'] == 'B-' ? 'selected' : '' ?>>B-</option>
+              <option value="AB+" <?= $donor['blood_type'] == 'AB+' ? 'selected' : '' ?>>AB+</option>
+              <option value="AB-" <?= $donor['blood_type'] == 'AB-' ? 'selected' : '' ?>>AB-</option>
+              <option value="O+" <?= $donor['blood_type'] == 'O+' ? 'selected' : '' ?>>O+</option>
+              <option value="O-" <?= $donor['blood_type'] == 'O-' ? 'selected' : '' ?>>O-</option>
+            </select>
+          </div>
+
           </div>
 
           <div class="col-md-6">
             <div class="mb-3">
               <label for="phone" class="form-label">Phone Number</label>
-              <input type="text" class="form-control" id="phone" name="phone" value="<?= htmlspecialchars($donor['phone']) ?>" />
+
+              <input type="text" class="form-control" id="phone" name="phone" pattern="\d{11}" maxlength="11" title="Please enter 11 digits only (numbers only)" value="<?= htmlspecialchars($donor['phone']) ?>" />
             </div>
 
             <div class="mb-3">

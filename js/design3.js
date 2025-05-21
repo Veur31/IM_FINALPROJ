@@ -1,26 +1,3 @@
-
-
-const bloodTypeInput = document.getElementById('blood_type');
-
-
-function isValidBloodType(bloodType) {
-  const bloodTypePattern = /^(A|B|AB|O)[+-]$/i;
-  return bloodTypePattern.test(bloodType);
-}
-
-
-function updateButtonState() {
-  const validBloodType = isValidBloodType(bloodTypeInput.value.trim());
-
-
-  submitBtn.disabled = !(validBloodType);
-}
-
-
-bloodTypeInput.addEventListener('input', updateButtonState);
-
-
-updateButtonState();
 const birthDateInput = document.getElementById('birth_date');
 const birthDateInput1 = document.getElementById('birth_date1');
 const ageInput1 = document.getElementById('age1');
@@ -29,7 +6,7 @@ const ageWarning = document.getElementById('age-warning');
 const donationInput = document.getElementById('last_donation_date');
 const donationWarning = document.getElementById('donation-warning');
 const submitBtn = document.getElementById('submitBtn');
-
+const bloodTypeInput = document.getElementById('blood_type');
 
 
 function checkAge() {
@@ -42,7 +19,7 @@ function checkAge() {
     age--;
   }
 
-  if (age >= 16 && age <= 65) {
+  if (age >= 0 && age <= 100) {
     ageInput.value = age;
     ageWarning.style.display = 'none';
     return true;
@@ -103,6 +80,4 @@ bloodTypeInput.addEventListener('input', updateButtonState);
 
 
 updateButtonState();
-
-
 

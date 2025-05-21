@@ -154,7 +154,7 @@ if (!empty($message)) echo $message;
                   <option selected disabled>Select Gender</option>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
-                  <option value="Other">Other</option>
+                
                 </select>
               </div>
 
@@ -171,16 +171,28 @@ if (!empty($message)) echo $message;
                 </div>
               </div>
 
-              <div class="mb-3">
-                <label for="blood_type" class="form-label">Blood Type</label>
-                <input type="text" class="form-control" id="blood_type" name="blood_type" placeholder="e.g., A+, O-, AB+" required/>
-              </div>
+                <div class="mb-3">
+                  <label for="blood_type" class="form-label">Blood Type</label>
+                  <select class="form-select" id="blood_type" name="blood_type" required>
+                    <option value="">Select Blood Type</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                  </select>
+                </div>
+
             </div>
 
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="phone" class="form-label">Phone Number</label>
-                <input type="text" class="form-control" id="phone" name="phone" required/>
+
+                <input type="text" class="form-control" id="phone" name="phone" pattern="\d{11}" maxlength="11" title="Please enter 11 digits only (numbers only)" required/>
               </div>
 
               <div class="mb-3">
@@ -203,7 +215,7 @@ if (!empty($message)) echo $message;
             </div>
           </div>
 
-          <button type="submit" id="submitBtn" class="btn btn-danger w-100">Update</button>
+          <button type="submit" id="submitBtn" class="btn btn-danger w-100">Submit</button>
         </form>
       <?php endif; ?>
     </div>
